@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import Home from "./index";
 import {api, DataProvider} from "../../contexts/DataContext";
 
@@ -104,14 +104,14 @@ describe("When a page is created", () => {
         </DataProvider>);
     expect(await screen.findAllByTestId('people-card-testid')).toHaveLength(6)
   })
-  it("a footer is displayed", () => {
+  it("a footer is displayed", async() => {
     api.loadData = jest.fn().mockReturnValue(data);
     const {container} = render(
         <DataProvider>
           <Home />
         </DataProvider>);
     const footer = container.querySelector('footer')
-    expect(footer).toBeInTheDocument();
+    await waitFor(()=> expect(footer).toBeInTheDocument());
   })
   it("an event card, with the last event, is displayed", async () => {
     api.loadData = jest.fn().mockReturnValue(data);

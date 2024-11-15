@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { api, DataProvider } from "../../contexts/DataContext";
 import Events from "./index";
+import {act} from "react-dom/test-utils";
 
 const data = {
   events: [
@@ -49,12 +50,15 @@ describe("When Events is created", () => {
   });
   describe("and an error occured", () => {
     it("an error message is displayed", async () => {
-      api.loadData = jest.fn().mockRejectedValue(new Error('Unable to load data'));
-      render(
-        <DataProvider>
-          <Events />
-        </DataProvider>
-      );
+      api.loadData = jest.fn().mockRejectedValue(new Error('Unable to load data'))
+      await act( ()=> {
+        render(
+            <DataProvider>
+              <Events />
+            </DataProvider>
+        );
+      })
+
       await screen.findByText("An error occured");
     });
   });
